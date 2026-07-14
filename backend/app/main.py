@@ -42,7 +42,17 @@ app.add_exception_handler(HttpException, http_exception_handler)
 from app.users.router import users_router
 app.include_router(users_router,
                    prefix="/auth",
-                   tags=["auth"])
+                   tags=["Auth"])
+
+from app.products.router import product_router
+app.include_router(product_router,
+                   prefix="/products",
+                   tags=["Products"])
+
+from app.moderation.routers.role_application import role_application_router
+app.include_router(role_application_router,
+                   prefix="/role-application",
+                   tags=["Role Applications"])
 
 
 @app.get("/ping")

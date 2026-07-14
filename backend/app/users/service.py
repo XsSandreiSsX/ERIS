@@ -20,7 +20,7 @@ password_hash = PasswordHash.recommended()
 
 class JWTService:
     @classmethod
-    async def generate_access_token(cls, user_id: int) -> str:
+    def generate_access_token(cls, user_id: int) -> str:
         payload = {
             "sub": str(user_id),
             "type": "access",
@@ -31,7 +31,7 @@ class JWTService:
         return jwt_token
 
     @classmethod
-    async def generate_refresh_token(cls, expires_at: datetime, jti: UUID, user_id: int) -> str:
+    def generate_refresh_token(cls, expires_at: datetime, jti: UUID, user_id: int) -> str:
         payload = {
             "sub": str(user_id),
             "type": "refresh",
@@ -43,7 +43,7 @@ class JWTService:
         return jwt_token
 
     @classmethod
-    async def verify_token(cls, token: str, token_type: Literal["access", "refresh"]) -> JWTPayload:
+    def verify_token(cls, token: str, token_type: Literal["access", "refresh"]) -> JWTPayload:
         required = {
             "access": ["sub", "exp", "type"],
             "refresh": ["sub", "exp", "type", "jti"],
@@ -55,6 +55,9 @@ class JWTService:
                 algorithms=settings.JWT_ALGORITHM,
                 options={"require": required[token_type]},
             )
+
+            if payload["type"] != token_type:
+                raise NotAuthenticatedException()
 
         except ExpiredSignatureError:
             raise ExpiredTokenException()
@@ -94,8 +97,8 @@ class UserService:
         await UserSessionDAO.add(session, user_id=user.id,
                                  jti=session_jti, expires_at=session_expires_at)
 
-        access_token = await JWTService.generate_access_token(user.id)
-        refresh_token = await JWTService.generate_refresh_token(session_expires_at, session_jti, user.id)
+        access_token = JWTService.generate_access_token(user.id)
+        refresh_token = JWTService.generate_refresh_token(session_expires_at, session_jti, user.id)
 
         return TokenPairResponse(
             access_token=access_token,
@@ -114,7 +117,10 @@ class UserService:
         if user_session.revoked_at is not None:
             raise NotAuthenticatedException()
 
-        return await JWTService.generate_access_token(refresh_token.sub)
+        if user_session.user_id != refresh_token.sub:
+            raise NotAuthenticatedException()
+
+        return JWTService.generate_access_token(refresh_token.sub)
 
     @classmethod
     async def logout(cls, *, session: AsyncSession, refresh_token: JWTPayload) -> None:

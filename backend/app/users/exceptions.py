@@ -22,3 +22,8 @@ class ExpiredTokenException(NotAuthenticatedException):
     error_code = "EXPIRED_TOKEN"
     detail = "Token has expired"
 
+
+class ForbiddenException(HttpException):
+    status_code = status.HTTP_403_FORBIDDEN
+    error_code = "FORBIDDEN"
+    detail = "You do not have permission to perform this action"
