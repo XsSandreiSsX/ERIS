@@ -22,6 +22,7 @@ class RoleApplication(Base):
     requested_role: Mapped[RoleEnum]
     full_name: Mapped[str] = mapped_column(String(128))
     phone: Mapped[str] = mapped_column(String(16))
+    description: Mapped[str] = mapped_column(String(512))
 
     status: Mapped[ReviewStatus] = mapped_column(default=ReviewStatus.PENDING)
     rejection_reason: Mapped[str | None]

@@ -27,3 +27,8 @@ class ForbiddenException(HttpException):
     status_code = status.HTTP_403_FORBIDDEN
     error_code = "FORBIDDEN"
     detail = "You do not have permission to perform this action"
+
+
+class RoleAlreadyAssignedException(ConflictException):
+    error_code = "ROLE_ALREADY_ASSIGNED"
+    detail = "User already has this role."

@@ -10,6 +10,11 @@ class RoleEnum(StrEnum):
 
 
 class PermissionEnum(StrEnum):
-    PRODUCT_CREATE = "seller.product_create"
-    PRODUCT_UPDATE = "seller.product_update"
-    PRODUCT_DELETE = "seller.product_delete"
+    PRODUCT_CREATE = "products.create"
+    PRODUCT_UPDATE = "products.update"
+    PRODUCT_DELETE = "products.delete"
+
+    VIEW_APPLICATIONS = "applications.view"
+    MODERATE_APPLICATIONS = "applications.moderate"
+
+    EDIT_SELLER_PROFILE = "seller_profiles.edit"

@@ -27,6 +27,11 @@ class User(Base):
         lazy="raise",
     )
 
+    seller_profile: Mapped["SellerProfile | None"] = relationship(
+        back_populates="user",
+        lazy="raise",
+    )
+
     created_at: Mapped[CreatedAt]
     updated_at: Mapped[UpdatedAt]
 

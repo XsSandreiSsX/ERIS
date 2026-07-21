@@ -45,9 +45,9 @@ class HasPermission:
                  session: ReadSessionDep,
                  current_user = Depends(get_current_user)
                 ) -> User | None:
-        is_permitted = await UserDAO.check_permission(session,
-                                                      user_id=current_user.id,
-                                                      permission=self.permission)
+        is_permitted = await UserDAO.has_permission(session,
+                                                    user_id=current_user.id,
+                                                    permission=self.permission)
 
         if not is_permitted:
             raise ForbiddenException()

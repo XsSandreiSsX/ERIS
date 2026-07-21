@@ -51,8 +51,18 @@ app.include_router(product_router,
 
 from app.moderation.routers.role_application import role_application_router
 app.include_router(role_application_router,
-                   prefix="/role-application",
+                   prefix="/role-applications",
                    tags=["Role Applications"])
+
+from app.moderation.routers.moderator_role_application import moderator_role_application_router
+app.include_router(moderator_role_application_router,
+                   prefix="/admin/role-applications",
+                   tags=["Role Applications"])
+
+from app.sellers.routers.profile import profile_seller_router
+app.include_router(profile_seller_router,
+                   prefix="/sellers",
+                   tags=["Sellers"])
 
 
 @app.get("/ping")

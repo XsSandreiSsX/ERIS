@@ -32,8 +32,10 @@ config.set_main_option(
 
 )
 
-from app.users.models import User, UserSession, Role, Permission, RolePermission, UserRole # noqa
-from app.moderation.models import RoleApplication
+from app.sellers.models import * # noqa
+from app.users.models import * # noqa
+from app.moderation.models import * # noqa
+
 
 
 

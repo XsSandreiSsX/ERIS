@@ -11,4 +11,4 @@ CreatedAt = Annotated[datetime.datetime, mapped_column(DateTime(timezone=True),
 
 UpdatedAt = Annotated[datetime.datetime, mapped_column(DateTime(timezone=True),
                                                        server_default=text("TIMEZONE('utc', now())"),
-                                                       onupdate=datetime.datetime.now(datetime.timezone.utc))]
+                                                       onupdate=lambda: datetime.datetime.now(datetime.timezone.utc))]

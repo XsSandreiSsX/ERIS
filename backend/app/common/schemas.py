@@ -1,19 +1,39 @@
 from typing import Self, TypeVar, Generic, Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
+DataT = TypeVar("T")
+DataB = TypeVar("B")
 
-DataT = TypeVar("DataT")
 
 class SuccessResponse(BaseModel, Generic[DataT]):
     data: DataT | None
-    meta: dict[str, Any] | None
-
-    @classmethod
-    def empty(cls) -> Self:
-        return cls(data=None, meta=None)
 
 
 class ErrorResponse(BaseModel):
     error_code: str
     detail: str
+
+
+class Pagination(BaseModel):
+    page: int = Field(default=1, ge=1)
+    size: int = Field(default=20, ge=1, le=100)
+
+    @property
+    def limit(self) -> int:
+        return self.size
+
+    @property
+    def offset(self) -> int:
+        return (self.page - 1) * self.size
+
+
+class PaginationMeta(BaseModel):
+    page: int
+    size: int
+    total_pages: int
+
+
+class PaginatedResponse(BaseModel, Generic[DataB]):
+    items: list[DataB]
+    meta: PaginationMeta
